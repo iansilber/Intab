@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+
+  "name": "Intab (Beta)",
+  "description": "This extension allows you to quick-view a new tab by holding down Option + Command while clicking a link.",
+  "version": "1.1.2",
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "permissions": ["background","webRequest","webRequestBlocking","tabs","<all_urls>"],
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "css": ["intab.css"],
+      "js": ["jquery.min.js", "jquery-ui.min.js", "intab.js", "jquery.hotkeys.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    "font/fontawesome-webfont.eot",
+    "font/fontawesome-webfont.ttf",
+    "font/fontawesome-webfont.svg",
+    "font/fontawesome-webfont.woff",
+    "loader.gif",
+    "options.js"
+  ]
+}
