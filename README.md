@@ -11,3 +11,4 @@ Want to contribute? There's a lot to do. A quick list of the top of my head:
 * Read Later support (Pocket, Instapaper, Readability)
 * Buffer support (?)
 * Function to have Intab takeover parent window
+* Allow dragging open Intab after .peak()
