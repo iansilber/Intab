@@ -10,3 +10,4 @@ Want to contribute? There's a lot to do. A quick list of the top of my head:
 * Safari version
 * Read Later support (Pocket, Instapaper, Readability)
 * Buffer support (?)
+* Function to have Intab takeover parent window
