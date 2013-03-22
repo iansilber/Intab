@@ -23,7 +23,39 @@
   text-decoration: none;
 }
 
-.intabExt iframe {border: none; background: #fff no-repeat 50% 50%; position: absolute; top: 0; left: 36px; cursor: auto;}
+.intabExt-urlForm input, .intabExt-urlForm input[type="text"] {
+  position: absolute;
+  bottom: 0px;
+  left: 36px;
+  width: 100%;
+  box-sizing: border-box;
+  height: 30px;
+  padding: 8px;
+  border: none;
+  /*border-bottom: 1px solid #ccc;*/
+  z-index: 1;
+  background: rgba(255,255,255,.9);
+  color: #999;
+  text-shadow: none!important;
+  box-shadow: none;
+  border-radius: 0px;
+  font-size: 13px;
+
+}
+
+.intabExt-urlForm input:focus, .intabExt-urlForm input[type="text"]:focus {
+  outline: none;
+  color: #333;
+}
+
+.intabExt iframe {
+  border: none;
+  background: #fff no-repeat 50% 50%;
+  position: absolute;
+  top: 0px;
+  left: 36px;
+  cursor: auto;
+}
 
 @font-face{
   font-family:'FontAwesome';

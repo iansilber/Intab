@@ -5,11 +5,17 @@ var IntabExt = {
   open: false,
   $container: null,
   $frame: null,
+  $urlForm: null,
+  $urlInput: null,
+  speed: 250,
+  width: 0,
 
   init: function() {
-    $("body").append('<div class="intabExt"><a href="#close" class="intabExt-close intabExt-control"><i class="fa-icon-remove"></i></a><br /><a href="#open_full_tab" class="intabExt-expand intabExt-control"><i class="fa-icon-external-link"></i></a><iframe width="100%" height="100%" src=""></iframe></div>');
+    $("body").append('<div class="intabExt"><a href="#close" title="Close" class="intabExt-close intabExt-control"><i class="fa-icon-remove"></i></a><br /><a href="#open_full_tab" title="Open in New Tab" class="intabExt-expand intabExt-control"><i class="fa-icon-external-link"></i></a><form class="intabExt-urlForm"><input type="text" placeholder="Enter url..." /></form><iframe width="100%" height="100%" src=""></iframe></div>');
     this.$container = $('.intabExt');
     this.$frame = $('.intabExt iframe');
+    this.$urlForm = $('.intabExt-urlForm');
+    this.$urlInput = $('.intabExt-urlForm input');
     this.bindEvents();
   },
 
@@ -27,6 +33,10 @@ var IntabExt = {
       }
     });
 
+    this.$urlInput.focus(function(e) {
+      setTimeout(function() {IntabExt.$urlInput.select();}, 0);
+    })
+
     $(window).keydown(function(evt) {
       if (evt.which == 27) IntabExt.close();
       if (evt.which == 91) IntabExt.cmd = true;
@@ -35,6 +45,16 @@ var IntabExt = {
       if (!IntabExt.open && (IntabExt.cmd && IntabExt.alt)) {
         IntabExt.peak();
       }
+
+      if (IntabExt.cmd && IntabExt.alt) {
+        var sel = IntabExt.getSelection();
+        if (sel.length > 0) {
+          console.log(sel);
+          href = 'http://google.com/search?q=' + sel;
+          IntabExt.show(href);
+        }
+      }
+
     }).keyup(function(evt) {
       if (evt.which == 91) IntabExt.cmd = false;
       if (evt.which == 18) IntabExt.alt = false;
@@ -44,8 +64,9 @@ var IntabExt = {
       }
     });
 
-    $(document).bind('keydown', 'alt+ctrl+n', function() {
-      var href = prompt('Enter a URL:');
+    this.$urlForm.submit(function(e) {
+      e.preventDefault();
+      href = IntabExt.$urlInput.val();
       if (href === null || href.length == 0) {
         return;
       }
@@ -55,16 +76,23 @@ var IntabExt = {
       IntabExt.show(href);
     });
 
+    $(document).bind('keydown', 'alt+ctrl+n', function() {
+      // $('.intabExt-src').show();
+    });
+
     IntabExt.$container.draggable({
       axis: 'x',
       iframeFix: true,
       drag: function( event, ui ) {
         
-        var width = 100 - (ui.position.left / $(window).width() *100);
-        if (width < 98 && width > 1) {
-          IntabExt.$container.width(width + '%');
+        IntabExt.width = 100 - (ui.position.left / $(window).width() *100);
+        if (IntabExt.width < 98 && IntabExt.width > 1) {
+          IntabExt.$container.width(IntabExt.width + '%');
         } else {
           return false;
+        }
+        if (IntabExt.width > 10) {
+          IntabExt.open = true;
         }
       },
       
@@ -78,6 +106,9 @@ var IntabExt = {
        IntabExt.$container.css('right', '0px');
        IntabExt.$container.css('left', 'auto');
        $('.iframeCover').remove();
+       if (IntabExt.width < 5) {
+        IntabExt.close();
+       }
       }
     });
 
@@ -101,8 +132,9 @@ var IntabExt = {
     this.$container.show();
     this.$frame.attr('src', href);
     if (!this.open) {
-      this.$container.animate({width: '40%'});
+      this.$container.animate({width: '40%'}, this.speed);
     }
+    this.$urlInput.val(href);
     this.open = true;
   },
 
@@ -110,6 +142,17 @@ var IntabExt = {
     this.$container.animate({width: '0px', right: '0px', left: 'auto'});
     this.$frame.attr('src', '');
     this.open = false;
+    this.$urlInput.val('');
+  },
+
+  getSelection: function() {
+      var text = "";
+      if (window.getSelection) {
+          text = window.getSelection().toString();
+      } else if (document.selection && document.selection.type != "Control") {
+          text = document.selection.createRange().text;
+      }
+      return text;
   }
 }
 
