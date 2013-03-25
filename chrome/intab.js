@@ -11,7 +11,7 @@ var IntabExt = {
   width: 0,
 
   init: function() {
-    $("body").append('<div class="intabExt"><a href="#close" title="Close" class="intabExt-close intabExt-control"><i class="fa-icon-remove"></i></a><br /><a href="#open_full_tab" title="Open in New Tab" class="intabExt-expand intabExt-control"><i class="fa-icon-external-link"></i></a><form class="intabExt-urlForm"><input type="text" placeholder="Enter url..." /></form><iframe width="100%" height="100%" src=""></iframe></div>');
+    $("body").append('<div class="intabExt"><a href="#close" title="Close" class="intabExt-close intabExt-control"><i class="fa-icon-remove"></i></a><br /><a href="#open_full_tab" title="Open in New Tab" class="intabExt-expand intabExt-control"><i class="fa-icon-external-link"></i></a><form class="intabExt-urlForm"><input type="text" placeholder="Enter url..." /></form><iframe sandbox="allow-forms allow-popups allow-pointer-lock allow-same-origin allow-scripts" width="100%" height="100%" src=""></iframe></div>');
     this.$container = $('.intabExt');
     this.$frame = $('.intabExt iframe');
     this.$urlForm = $('.intabExt-urlForm');
