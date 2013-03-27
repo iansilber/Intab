@@ -11,7 +11,7 @@ chrome.webRequest.onHeadersReceived.addListener(
     },
     {
         urls: [ '*://*/*' ], // Pattern to match all http(s) pages
-        types: [ 'main_frame', 'sub_frame' ]
+        types: [ 'sub_frame' ]
     },
     ['blocking', 'responseHeaders']
 );
