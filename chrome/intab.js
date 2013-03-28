@@ -1,5 +1,7 @@
 var IntabExt = {
 
+  httpProtocol: location.protocol === 'https://' ? 'https://' : 'http://',
+
   cmd: false,
   alt: false,
   open: false,
@@ -22,20 +24,22 @@ var IntabExt = {
   bindEvents: function() {
 
     $("body").on("click", "a", function(event) {
-      var href = $(this).attr('href');
-      if (href.indexOf("http://")==0 && href.indexOf("https://")==0) {
+      // Exclude missing/unknown protocols such as javascript:
+      if (!/^(https?|file|chrome-extension|ftps?):/i.test(this.protocol)) {
         return;
       }
       if (IntabExt.cmd && IntabExt.alt || IntabExt.open) {
-        IntabExt.show(href);
+        IntabExt.show(this.href);
         event.stopPropagation();
-        return false;
+        event.preventDefault();
       }
     });
 
     this.$urlInput.focus(function(e) {
-      setTimeout(function() {IntabExt.$urlInput.select();}, 0);
-    })
+      setTimeout(function() {
+        IntabExt.$urlInput.select();
+      }, 0);
+    });
 
     $(window).keydown(function(evt) {
       if (evt.which == 27) IntabExt.close();
@@ -50,7 +54,7 @@ var IntabExt = {
         var sel = IntabExt.getSelection();
         if (sel.length > 0) {
           console.log(sel);
-          href = 'http://google.com/search?q=' + sel;
+          var href = IntabExt.httpProtocol + 'www.google.com/search?q=' + encodeURIComponent(sel);
           IntabExt.show(href);
         }
       }
@@ -66,12 +70,12 @@ var IntabExt = {
 
     this.$urlForm.submit(function(e) {
       e.preventDefault();
-      href = IntabExt.$urlInput.val();
-      if (href === null || href.length == 0) {
+      var href = IntabExt.$urlInput.val();
+      if (href === null || href.length === 0) {
         return;
       }
-      if (!href.match(/^http|https/)) {
-        href = 'http://' + href;
+      if (!href.match(/^(http|https)/)) {
+        href = IntabExt.httpProtocol + href;
       }
       IntabExt.show(href);
     });
@@ -97,9 +101,10 @@ var IntabExt = {
       },
       
       start: function () {
-          IntabExt.$container.each(function (index, element) {
+        IntabExt.$container.each(function (index, element) {
           var d = $('<div class="iframeCover" style="z-index:99;position:absolute;width:100%;top:0px;left:0px;height:' + $(element).height() + 'px"></div>');
-          $(element).append(d);});
+          $(element).append(d);
+        });
       },
 
       stop: function (event, ui) {
@@ -117,9 +122,11 @@ var IntabExt = {
     });
 
     $(".intabExt-expand").on("click", function() {
-      window.open($(".intabExt iframe").attr('src'));
-      intabExt.close();
-    })
+      if (window.open($(".intabExt iframe").attr('src'))) {
+        // window.open() returns null if window is blocked (popup blocker?)
+        intabExt.close();
+      }
+    });
 
 
   },
@@ -154,7 +161,9 @@ var IntabExt = {
       }
       return text;
   }
-}
+};
 
 
-$(function() {IntabExt.init()});
+$(function() {
+  IntabExt.init();
+});
