@@ -25,5 +25,8 @@
     "font/fontawesome-webfont.woff",
     "loader.gif",
     "options.js"
-  ]
+  ],
+  "icons": {
+    "16": "icon-16.png"
+  }
 }

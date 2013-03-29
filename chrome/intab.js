@@ -1,3 +1,12 @@
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+  if (request.method == 'link') {
+    IntabExt.show(request.href);
+  } else if (request.method == 'selection') {
+    var href = IntabExt.httpProtocol + 'www.google.com/search?q=' + encodeURIComponent(request.text);
+    IntabExt.show(href);
+  }
+});
+
 var IntabExt = {
 
   httpProtocol: location.protocol === 'https://' ? 'https://' : 'http://',
@@ -53,7 +62,6 @@ var IntabExt = {
       if (IntabExt.cmd && IntabExt.alt) {
         var sel = IntabExt.getSelection();
         if (sel.length > 0) {
-          console.log(sel);
           var href = IntabExt.httpProtocol + 'www.google.com/search?q=' + encodeURIComponent(sel);
           IntabExt.show(href);
         }

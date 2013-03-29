@@ -15,3 +15,22 @@ chrome.webRequest.onHeadersReceived.addListener(
     },
     ['blocking', 'responseHeaders']
 );
+
+var link = chrome.contextMenus.create({
+    "title": "View with Intab", 
+    "contexts": ["link", "selection"],
+    "onclick": function(info) {
+
+        if (info.linkUrl) {
+            data = {method: 'link', href: info.linkUrl}
+        } else if (info.selectionText) {
+            data = {method: 'selection', text: info.selectionText}
+        }
+
+        chrome.tabs.getSelected(null, function(tab) {
+          chrome.tabs.sendRequest(tab.id, data, function(response) {
+            console.log(response.data);
+          });
+        });
+    }
+});
